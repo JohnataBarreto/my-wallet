@@ -1,4 +1,5 @@
 import React from 'react';
+import './Wallet.css';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import currencyBRLApi from '../Currenses/cotacoes';
@@ -13,15 +14,17 @@ class Wallet extends React.Component {
     super();
     this.state = ({
       contagem: 0,
-      valor: '',
+      valor: 0,
       descricao: '',
       corrente: '',
       metodo: '',
       tipo: '',
       expenses: [],
       total: 0,
+      disabled: true,
     });
   }
+
 
   async componentDidMount() {
     const { currUp } = this.props;
@@ -31,12 +34,29 @@ class Wallet extends React.Component {
     currUp(saida);
   }
 
-  handleChange = ({ target }) => {
-    const { name } = target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
+  chandDisabled = () => {
+    const {
+      valor,
+      corrente,
+    } = this.state;
+    if (valor > 0 && corrente) {
+      this.setState({ disabled: false });
+    } else {
+      this.setState({ disabled: true })
+    }
+  }
+
+  chandValue = (name, value) => {
     this.setState({
       [name]: value,
     });
+  }
+
+  handleChange = async ({ target }) => {
+    const { name } = target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    await this.chandValue(name, value);
+    this.chandDisabled()
   };
 
   criatExpense = async () => {
@@ -89,49 +109,65 @@ class Wallet extends React.Component {
 
   render() {
     const { user, wallet } = this.props;
-    const { total, valor, descricao, corrente, metodo, tipo } = this.state;
+    const { total, valor, descricao, corrente, disabled, metodo, tipo } = this.state;
     const currencie = wallet.currencies;
     const expense = wallet.expenses;
     return (
       <>
-        <header>
-          <div data-testid="email-field">
+        <header
+          class="header"
+        >
+          <span data-testid="email-field">
             E-mail:
             {''}
             { user }
-          </div>
-          <div data-testid="total-field">
-            { total.toFixed(2) }
-          </div>
-          <div data-testid="header-currency-field">
-            BRL
+          </span>
+          <div>
+            <span data-testid="total-field">
+              { total.toFixed(2) }
+            </span>
+            <span data-testid="header-currency-field">
+              BRL
+            </span>
           </div>
         </header>
         <form>
-          <input
-            type="number"
-            data-testid="value-input"
-            onChange={ this.handleChange }
-            name="valor"
-            id="valor"
-            value={ valor }
-          />
-          <input
-            type="text"
-            data-testid="description-input"
-            onChange={ this.handleChange }
-            name="descricao"
-            value={ descricao }
-          />
+          <label>
+             Valor da despesa 
+            <input
+              type="number"
+              class="inputs"
+              data-testid="value-input"
+              onChange={ this.handleChange }
+              name="valor"
+              id="valor"
+              value={ valor }
+              placeholder="Digite o valor"
+            />
+          </label>
+          <label>
+            Descrição
+            <input
+              type="text"
+              class="inputs"
+              data-testid="description-input"
+              onChange={ this.handleChange }
+              name="descricao"
+              value={ descricao }
+              placeholder="Digite aqui"
+            />
+          </label>
           <label htmlFor="moeda">
             Moeda:
             <select
               data-testid="currency-input"
+              class="inputs"
               name="corrente"
               id="moeda"
               onChange={ this.handleChange }
               value={ corrente }
             >
+              <option value="" disabled selected>Selecione...</option>
               {currencie.map((item, index) => (
                 <option
                   key={ index }
@@ -141,77 +177,89 @@ class Wallet extends React.Component {
                 </option>))}
             </select>
           </label>
-          <select
-            data-testid="method-input"
-            name="metodo"
-            onChange={ this.handleChange }
-            value={ metodo }
-          >
-            <option value="Dinheiro">Dinheiro</option>
-            <option value="Cartão de crédito">Cartão de crédito</option>
-            <option value="Cartão de débito">Cartão de débito</option>
-          </select>
-          <select
-            data-testid="tag-input"
-            name="tipo"
-            onChange={ this.handleChange }
-            value={ tipo }
-          >
-            <option value="Alimentação">Alimentação</option>
-            <option value="Lazer">Lazer</option>
-            <option value="Trabalho">Trabalho</option>
-            <option value="Transporte">Transporte</option>
-            <option value="Saúde">Saúde</option>
-          </select>
+          <label>
+            Forma de pagamento
+            <select
+              data-testid="method-input"
+              class="inputs"
+              name="metodo"
+              onChange={ this.handleChange }
+              value={ metodo }
+            >
+              <option value="" disabled selected>Selecione...</option>
+              <option value="Dinheiro">Dinheiro</option>
+              <option value="Cartão de crédito">Cartão de crédito</option>
+              <option value="Cartão de débito">Cartão de débito</option>
+            </select>
+          </label>
+          <label>
+            Tipo da despesa
+            <select
+              data-testid="tag-input"
+              class="inputs"
+              name="tipo"
+              onChange={ this.handleChange }
+              value={ tipo }
+            >
+              <option value="" disabled selected>Selecione...</option>
+              <option value="Alimentação">Alimentação</option>
+              <option value="Lazer">Lazer</option>
+              <option value="Trabalho">Trabalho</option>
+              <option value="Transporte">Transporte</option>
+              <option value="Saúde">Saúde</option>
+            </select>
+          </label>
           <button
             type="button"
             onClick={ this.clickExpencisUpdate }
+            disabled={ disabled }
           >
             Adicionar despesa
           </button>
         </form>
-        <table>
-          <tbody>
-            <tr>
-              <th>Descrição</th>
-              <th>Tag</th>
-              <th>Método de pagamento</th>
-              <th>Valor </th>
-              <th>Moeda</th>
-              <th>Câmbio utilizado</th>
-              <th>Valor convertido</th>
-              <th>Moeda de conversão</th>
-              <th>Editar/Excluir</th>
-            </tr>
-            {
-              expense.map((item) => (
-                <tr key={ item.id } id={ item.id }>
-                  <td>{ item.description }</td>
-                  <td>{ item.tag }</td>
-                  <td>{ item.method }</td>
-                  <td>{ (+item.value).toFixed(2) }</td>
-                  <td>{ item.name }</td>
-                  <td>{ item.exchangeRates[item.currency].name }</td>
-                  <td>{ (+item.exchangeRates[item.currency].ask).toFixed(2) }</td>
-                  <td>
-                    { ((+item.value)
-                   * (+item.exchangeRates[item.currency].ask)).toFixed(2) }
-                  </td>
-                  <td>Real</td>
-                  <td>
-                    <button
-                      type="button"
-                      data-testid="delete-btn"
-                      onClick={ this.deleteExpense }
-                    >
-                      Deletar
-                    </button>
-                  </td>
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
+        <fieldset>
+          <table>
+            <tbody>
+              <tr>
+                <th>Descrição</th>
+                <th>Tag</th>
+                <th>Método de pagamento</th>
+                <th>Valor </th>
+                <th>Moeda</th>
+                <th>Câmbio utilizado</th>
+                <th>Valor convertido</th>
+                <th>Moeda de conversão</th>
+                <th>Excluir</th>
+              </tr>
+              {
+                expense.map((item) => (
+                  <tr key={ item.id } id={ item.id }>
+                    <td>{ item.description }</td>
+                    <td>{ item.tag }</td>
+                    <td>{ item.method }</td>
+                    <td>{ (+item.value).toFixed(2) }</td>
+                    <td>{ item.exchangeRates[item.currency].name }</td>
+                    <td>{ (+item.exchangeRates[item.currency].ask).toFixed(2) }</td>
+                    <td>
+                      { ((+item.value)
+                    * (+item.exchangeRates[item.currency].ask)).toFixed(2) }
+                    </td>
+                    <td>Real</td>
+                    <td>
+                      <button
+                        type="button"
+                        data-testid="delete-btn"
+                        onClick={ this.deleteExpense }
+                      >
+                        Deletar
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </fieldset>
       </>
     );
   }
