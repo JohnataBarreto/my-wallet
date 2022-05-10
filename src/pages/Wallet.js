@@ -5,16 +5,14 @@ import PropTypes from 'prop-types';
 import currencyBRLApi from '../Currenses/cotacoes';
 import checkCurrenci from '../actions/WalletUpdate';
 import saveExpenses from '../actions/expensesUpdate';
-import saveSum from '../actions/sumUdate';
 import deleteExpenses from '../actions/deletExpense';
-import deletSum from '../actions/SumDowgrade';
 
 class Wallet extends React.Component {
   constructor() {
     super();
     this.state = ({
       contagem: 0,
-      valor: 0,
+      valor: '',
       descricao: '',
       corrente: '',
       metodo: '',
@@ -75,41 +73,47 @@ class Wallet extends React.Component {
 
   clickExpencisUpdate = async (event) => {
     event.preventDefault();
-    const { expUp, sumUp } = this.props;
-    const { expenses, valor, total, contagem } = this.state;
+    const { expUp } = this.props;
+    const { expenses, contagem } = this.state;
     const expense = await this.criatExpense();
     expenses.push(expense);
-    const cot = expense.currency;
-    const exchangeRate = Object.values(expense.exchangeRates);
-    const rate = exchangeRate.find((item) => item.code === cot);
-    const valor1 = +valor * rate.ask;
-    const soma = total + valor1;
     const contador = (contagem + 1);
-    this.setState({ total: soma, contagem: contador });
+    this.setState({ contagem: contador });
     expUp(expenses);
-    sumUp(soma);
-    this.setState({ valor: '', descricao: '', corrente: '', metodo: '', tipo: '' });
-    console.log(rate);
-    console.log(cot);
+    this.setState({ valor: '', descricao: '', corrente: '', metodo: '', tipo: '', disabled: true });
   }
 
   deleteExpense = async ({ target }) => {
     const deletId = target.id;
-    const { delExp, wallet, sumDow } = this.props;
-    const { total, contagem } = this.state;
+    const { delExp, wallet } = this.props;
+    const { contagem } = this.state;
     const exp = wallet.expenses;
     const expenses = await exp.filter((expense) => +expense.id !== +deletId);
     delExp(expenses);
-    const sum = await exp.filter((expense) => +expense.id === +deletId);
-    const soma = total - sum[0].value;
     const contador = (contagem - 1);
-    this.setState({ total: soma, contagem: contador });
-    sumDow(soma);
+    this.setState({ contagem: contador });
+  }
+
+  sum = (expense) => { 
+    if (expense.length !== 0) {
+      return (
+        <span>
+          {
+            expense.map((item) => (
+            ((+item.value)
+              * (+item.exchangeRates[item.currency].ask)).toFixed(2)
+              )).reduce((soma, i) => +soma + +i)
+          }
+        </span>
+      )
+    } else {
+      return (<span>0,00</span>)
+    }
   }
 
   render() {
     const { user, wallet } = this.props;
-    const { total, valor, descricao, corrente, disabled, metodo, tipo } = this.state;
+    const { valor, descricao, corrente, disabled, metodo, tipo } = this.state;
     const currencie = wallet.currencies;
     const expense = wallet.expenses;
     return (
@@ -122,14 +126,11 @@ class Wallet extends React.Component {
             {''}
             { user }
           </span>
-          <div>
-            <span data-testid="total-field">
-              { total.toFixed(2) }
-            </span>
-            <span data-testid="header-currency-field">
-              BRL
-            </span>
-          </div>
+          <span>
+            R$
+            {''}
+            {this.sum(expense)}
+          </span>
         </header>
         <form>
           <label>
@@ -233,7 +234,11 @@ class Wallet extends React.Component {
               </tr>
               {
                 expense.map((item) => (
-                  <tr key={ item.id } id={ item.id }>
+                  <tr
+                    key={ item.id }
+                    id={ item.id }
+                    name={ (+item.exchangeRates[item.currency].ask).toFixed(2) }
+                  >
                     <td>{ item.description }</td>
                     <td>{ item.tag }</td>
                     <td>{ item.method }</td>
@@ -260,6 +265,18 @@ class Wallet extends React.Component {
             </tbody>
           </table>
         </fieldset>
+        <footer
+          class="footer"
+        >
+          <a
+          href=''
+          >
+            <img
+              src='email.png'
+              alt='link para email de johnata barreto'
+            />
+          </a>
+        </footer>
       </>
     );
   }
@@ -289,7 +306,5 @@ const mapDispatchToProps = (dispatch) => ({
   currUp: (currencies) => dispatch(checkCurrenci(currencies)),
   expUp: (expenses) => dispatch(saveExpenses(expenses)),
   delExp: (expenses) => dispatch(deleteExpenses(expenses)),
-  sumUp: (soma) => dispatch(saveSum(soma)),
-  sumDow: (soma) => dispatch(deletSum(soma)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Wallet);
