@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import './Login.css';
 import { connect } from 'react-redux';
 import clickButton from '../actions/userUpdate';
 import { EMAIL_INPUT_TEST_ID, PASSWORD_INPUT_TEST_ID } from '../tests/helpers/constants';
+import WalettImage from '../wallet.png';
 
 class Login extends React.Component {
   constructor(props) {
@@ -61,37 +63,45 @@ class Login extends React.Component {
     } = this.state;
 
     return (
-      <form>
-        <section>
-          <label htmlFor="email">
-            E-mail
-            {''}
-            <input
-              type="email"
-              data-testid={ EMAIL_INPUT_TEST_ID }
-              onChange={ this.handleChange }
-              name="email"
-            />
-          </label>
-          <label htmlFor="senha">
-            senha
-            {''}
-            <input
-              type="password"
-              data-testid={ PASSWORD_INPUT_TEST_ID }
-              onChange={ this.handleChange }
-              name="senha"
-            />
-          </label>
-        </section>
-        <button
-          type="button"
-          disabled={ disabled }
-          onClick={ this.onClickButton }
-        >
-          Entrar
-        </button>
-      </form>
+      <>
+        <form>
+          <section>
+            <label htmlFor="email">
+              E-mail
+              {''}
+              <input
+                type="email"
+                class="input"
+                data-testid={ EMAIL_INPUT_TEST_ID }
+                onChange={ this.handleChange }
+                name="email"
+              />
+            </label>
+            <label htmlFor="senha">
+              senha
+              {''}
+              <input
+                type="password"
+                class="input"
+                data-testid={ PASSWORD_INPUT_TEST_ID }
+                onChange={ this.handleChange }
+                name="senha"
+              />
+            </label>
+          </section>
+          <button
+            type="button"
+            disabled={ disabled }
+            onClick={ this.onClickButton }
+          >
+            Entrar
+          </button>
+        </form>
+        <img
+          src={ WalettImage }
+          alt='wallet'
+        />
+      </>
     );
   }
 }

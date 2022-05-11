@@ -6,6 +6,12 @@ import currencyBRLApi from '../Currenses/cotacoes';
 import checkCurrenci from '../actions/WalletUpdate';
 import saveExpenses from '../actions/expensesUpdate';
 import deleteExpenses from '../actions/deletExpense';
+import {
+  AiFillLinkedin,
+  AiFillMail,
+  AiOutlineGithub,
+} from "react-icons/ai";
+import { GiEasterEgg } from "react-icons/gi";
 
 class Wallet extends React.Component {
   constructor() {
@@ -269,12 +275,32 @@ class Wallet extends React.Component {
           class="footer"
         >
           <a
-          href=''
+          href='johnatabarreto@hotmail.com'
+          className='icon'
+          target='_blank'
           >
-            <img
-              src='email.png'
-              alt='link para email de johnata barreto'
-            />
+            <AiFillMail />
+          </a>
+          <a
+          href='https://github.com/JohnataBarreto'
+          className='icon'
+          target='_blank'
+          >
+            <AiOutlineGithub />
+          </a>
+          <a
+          href='https://www.linkedin.com/in/johnata-barreto/'
+          className='icon'
+          target='_blank'
+          >
+            <AiFillLinkedin />
+          </a>
+          <a
+          href='http://www.atari2600.com.br/Sites/Atari/AtariFull.aspx'
+          className='icon'
+          target='_blank'
+          >
+            <GiEasterEgg />
           </a>
         </footer>
       </>
