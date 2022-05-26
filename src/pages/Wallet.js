@@ -152,18 +152,6 @@ class Wallet extends React.Component {
               placeholder="Digite o valor"
             />
           </label>
-          <label>
-            Descrição
-            <input
-              type="text"
-              class="inputs"
-              data-testid="description-input"
-              onChange={ this.handleChange }
-              name="descricao"
-              value={ descricao }
-              placeholder="Digite aqui"
-            />
-          </label>
           <label htmlFor="moeda">
             Moeda:
             <select
@@ -215,6 +203,18 @@ class Wallet extends React.Component {
               <option value="Transporte">Transporte</option>
               <option value="Saúde">Saúde</option>
             </select>
+          </label>
+          <label>
+            Descrição
+            <input
+              type="text"
+              class="inputs"
+              data-testid="description-input"
+              onChange={ this.handleChange }
+              name="descricao"
+              value={ descricao }
+              placeholder="Digite aqui"
+            />
           </label>
           <button
             type="button"

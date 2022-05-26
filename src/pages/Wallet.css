@@ -16,6 +16,14 @@ form {
 
 .inputs {
   margin-left: 10px;
+  margin-right: 10px;
+  width: auto;
+}
+
+button {
+  margin-left: 10px;
+  margin-right: 10px;
+  width: auto;
 }
 
 table {
@@ -26,6 +34,7 @@ table {
 
 table, th, td {
   border: 1px solid black;
+  font-size: 10px;
 }
 
 footer {
