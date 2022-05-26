@@ -82,10 +82,10 @@ class Wallet extends React.Component {
     const { expUp } = this.props;
     const { expenses, contagem } = this.state;
     const expense = await this.criatExpense();
-    expenses.push(expense);
+    const exp = [...expenses, expense];
     const contador = (contagem + 1);
-    this.setState({ contagem: contador });
-    expUp(expenses);
+    this.setState({ contagem: contador, expenses: exp  });
+    expUp(exp);
     this.setState({ valor: '', descricao: '', corrente: '', metodo: '', tipo: '', disabled: true });
   }
 
@@ -94,11 +94,11 @@ class Wallet extends React.Component {
     const { delExp, wallet } = this.props;
     const { contagem } = this.state;
     const exp = wallet.expenses;
-    const expenses = await exp.filter((expense) => expense.id !== deletId);
+    const expenses = await exp.filter((expense) => +expense.id !== +deletId);
     delExp(expenses);
     const contador = (contagem - 1);
     this.setState({ contagem: contador });
-    console.log(deletId);
+    console.log(expenses);
   }
 
   sum = (expense) => { 
