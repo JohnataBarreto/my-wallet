@@ -97,10 +97,19 @@ class Login extends React.Component {
             Entrar
           </button>
         </form>
-        <img
-          src={ WalettImage }
-          alt='wallet'
-        />
+        <div class="capa">
+          <h1>
+            My Wallet
+          </h1>
+          <img
+            src={ WalettImage }
+            alt='wallet'
+          />
+          <h3>
+            Essa é a sua carteira digital. Nela voçê vai grenciar seus gastos e otimizar seus recursos em qualquer lugar do mundo. 
+          </h3>
+        </div>
+        
       </>
     );
   }

@@ -6,12 +6,12 @@ label {
   margin-left: 5px;
 }
 
-img {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 10%;
-}
-button{
+button {
   margin-right: 20px;
+}
+
+.capa {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
