@@ -75,6 +75,7 @@ class Login extends React.Component {
                 data-testid={ EMAIL_INPUT_TEST_ID }
                 onChange={ this.handleChange }
                 name="email"
+                placeholder='digite seu e-mail'
               />
             </label>
             <label htmlFor="senha">
@@ -86,6 +87,8 @@ class Login extends React.Component {
                 data-testid={ PASSWORD_INPUT_TEST_ID }
                 onChange={ this.handleChange }
                 name="senha"
+                placeholder='digite sua senha'
+
               />
             </label>
           </section>
@@ -99,7 +102,7 @@ class Login extends React.Component {
         </form>
         <div class="capa">
           <h1>
-            My Wallet
+            Carteira digital
           </h1>
           <img
             src={ WalettImage }
