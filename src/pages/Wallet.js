@@ -94,10 +94,11 @@ class Wallet extends React.Component {
     const { delExp, wallet } = this.props;
     const { contagem } = this.state;
     const exp = wallet.expenses;
-    const expenses = await exp.filter((expense) => +expense.id !== +deletId);
+    const expenses = await exp.filter((expense) => expense.id !== deletId);
     delExp(expenses);
     const contador = (contagem - 1);
     this.setState({ contagem: contador });
+    console.log(deletId);
   }
 
   sum = (expense) => { 
@@ -128,19 +129,19 @@ class Wallet extends React.Component {
           class="header"
         >
           <span data-testid="email-field">
-            E-mail:
+            USUÁIO:
             {''}
             { user }
           </span>
           <span>
-            R$
+            TOTAL GASTO R$
             {''}
             {this.sum(expense)}
           </span>
         </header>
         <form>
           <label>
-             Valor da despesa 
+            Valor da despesa: 
             <input
               type="number"
               class="inputs"
@@ -150,6 +151,7 @@ class Wallet extends React.Component {
               id="valor"
               value={ valor }
               placeholder="Digite o valor"
+              min={ 0 }
             />
           </label>
           <label htmlFor="moeda">
@@ -173,7 +175,7 @@ class Wallet extends React.Component {
             </select>
           </label>
           <label>
-            Forma de pagamento
+            Forma de pagamento:
             <select
               data-testid="method-input"
               class="inputs"
@@ -188,7 +190,7 @@ class Wallet extends React.Component {
             </select>
           </label>
           <label>
-            Tipo da despesa
+            Tipo da despesa:
             <select
               data-testid="tag-input"
               class="inputs"
@@ -205,7 +207,7 @@ class Wallet extends React.Component {
             </select>
           </label>
           <label>
-            Descrição
+            Descrição:
             <input
               type="text"
               class="inputs"
@@ -224,7 +226,7 @@ class Wallet extends React.Component {
             Adicionar despesa
           </button>
         </form>
-        <fieldset>
+        <fieldset class="fundo">
           <table>
             <tbody>
               <tr>
@@ -242,7 +244,6 @@ class Wallet extends React.Component {
                 expense.map((item) => (
                   <tr
                     key={ item.id }
-                    id={ item.id }
                     name={ (+item.exchangeRates[item.currency].ask).toFixed(2) }
                   >
                     <td>{ item.description }</td>
@@ -259,6 +260,7 @@ class Wallet extends React.Component {
                     <td>
                       <button
                         type="button"
+                        id={ item.id }
                         data-testid="delete-btn"
                         onClick={ this.deleteExpense }
                       >
